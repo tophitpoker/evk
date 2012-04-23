@@ -1,0 +1,11 @@
+{application, evk, [
+    {description, "Erlang vkontakte"},
+    {vsn, "1.0"},
+    {modules, [evk]},
+    {registered, []},
+    {applications, [
+        kernel,
+        stdlib
+    ]},
+    {env, []}
+]}.

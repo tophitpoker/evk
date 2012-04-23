@@ -1,26 +1,39 @@
+%%% @doc evk main interface module
 %%%
-%%% @doc Build universal url request
 %%% @end
-%%%
--module(evk_api).
+-module (evk).
 
--export([get_vk_url/4]).
+-export([make_url/4]).
 
 -type params() :: [{Key :: atom(), Value :: binary()}].
 
+%%
+%% secure.* methods
+%%
+-define(SECURE_SEND_NOTIFICATION, <<"secure.sendNotification">>).
+-define(SECURE_GET_APP_BALANCE, <<"secure.getAppBalance">>).
+-define(SECURE_GET_BALANCE, <<"secure.getBalance">>).
+-define(SECURE_WITHDRAW_VOTES, <<"secure.withdrawVotes">>).
+-define(SECURE_GET_TRANSACTIONS_HISTORY, <<"secure.getTransactionsHistory">>).
+-define(SECURE_ADD_RATING, <<"secure.addRating">>).
+-define(SECURE_SET_COUNTER, <<"secure.setCounter">>).
+
+%%
+-define(GET_PROFILES, <<"getProfiles">>).
+
 %% @doc Build url request to http://api.vk.com/
-%% @param ApiId - vkontakte application id
+%% @param AppId - vkontakte application id
 %% @param SecretKey - application  secret key
 %% @param Method - method request
 %% @param Params - list of param to request
 %% @end
--spec get_vk_url(integer(), binary() | maybe_improper_list(any(),binary() | []) | byte(), Method :: binary(), Params :: params()) -> binary().
-get_vk_url(ApiId, SecretKey, Method, Params) ->
+-spec make_url(integer(), binary() | maybe_improper_list(any(),binary() | []) | byte(), Method :: binary(), Params :: params()) -> binary().
+make_url(AppId, SecretKey, Method, Params) ->
     % Api url
     ApiUrl = "http://api.vk.com/api.php",
     
     % Add api_id to params
-    NewParams1 = lists:append([{api_id, ApiId}], Params),
+    NewParams1 = lists:append([{api_id, AppId}], Params),
     % Add version to params
     NewParams2 = lists:append([{v, <<"3.0">>}], NewParams1),
     % Add method to params
@@ -59,7 +72,7 @@ get_vk_url(ApiId, SecretKey, Method, Params) ->
     % Build query    
     list_to_binary(lists:flatten(ApiUrl ++ "?" ++ params(NewParams7))).
         
-%% @doc Add '&' between params
+%% @doc Add symbol between params
 %% @end
 -spec params(Params :: [{atom, binary()}, ...]) -> string().
 params(Params) ->
