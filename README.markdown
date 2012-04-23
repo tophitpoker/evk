@@ -1,13 +1,13 @@
 ## App evk ##
 
-## Get request url usage: ##
+### Get request url usage: ###
 
 To build url request call ```evk:make_url(AppId, SecretKey, Method, MethodParams).```
 
 ```erlang
-evk:make_url(<<"100">>, <<"SecretKey">>, <<"getProfiles">>, [{uids, <<"100">>}, {fields, <<"online">>}]).
+evk:make_url(<<"100">>, <<"SecretKey">>, ?GET_PROFILES, [{uids, <<"200200">>}, {fields, <<"online">>}]).
 ```
 
-## Licence ##
+### Licence ###
 
 MIT - http://en.wikipedia.org/wiki/MIT_License
