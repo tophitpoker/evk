@@ -31,8 +31,6 @@
 %% @end
 -spec make_url(integer(), binary() | maybe_improper_list(any(),binary() | []) | byte(), Method :: binary(), Params :: params()) -> binary().
 make_url(AppId, SecretKey, Method, Params) ->
-    % Api url
-    ApiUrl = "http://api.vk.com/api.php",
     % Add api_id to params
     NewParams1 = lists:append([{api_id, AppId}], Params),
     % Add version to params
