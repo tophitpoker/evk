@@ -1,4 +1,6 @@
-## App evk ##
+## evk ##
+
+Erlang library to access API of VK.com social network.
 
 ### Get VK API Request URL ###
 
