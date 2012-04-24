@@ -48,11 +48,12 @@ make_url(AppId, SecretKey, Method, Params) ->
     % Flat this list and add SeckertKey to the end of sig
     Sig = lists:append(lists:flatten(AppendedList), binary_to_list(SecretKey)),
     % Convert sig to md5
-    Md5Sig = erlang:md5(Sig),
+    Md5Sig = list_to_binary(md5_hex(Sig)),
     % Add sig to params
     NewParams7 = lists:append(SortParams, [{sig, Md5Sig}]),
     % Build query
     list_to_binary(lists:flatten(?EVK_API_URL ++ "?" ++ params(NewParams7))).
+    
 
 %% @doc Add symbol between params
 %% @end
@@ -78,7 +79,21 @@ params(Params) ->
 get_timestamp() ->
     {M, S, _} = now(),
     list_to_binary(io_lib:format("~p", [M * 1000000 + S])).
+    
+md5_hex(S) ->
+    Md5_bin =  erlang:md5(S),
+    Md5_list = binary_to_list(Md5_bin),
+    lists:flatten(list_to_hex(Md5_list)).
+    
+list_to_hex(L) ->
+    lists:map(fun(X) -> int_to_hex(X) end, L).
 
+int_to_hex(N) when N < 256 ->
+    [hex(N div 16), hex(N rem 16)].
 
+hex(N) when N < 10 ->
+    $0+N;
 
+hex(N) when N >= 10, N < 16 ->
+    $a + (N-10).
 
