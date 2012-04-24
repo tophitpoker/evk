@@ -2,6 +2,9 @@
 %%%
 %%% @end
 
+-ifndef(_EVK_H).
+-define(_EVK_H, true).
+
 %%
 %% secure.* methods
 %%
@@ -17,3 +20,5 @@
 -define(EVK_GET_PROFILES, <<"getProfiles">>).
 
 -define(EVK_API_URL, "http://api.vk.com/api.php").
+
+-endif.  % _EVK_H
