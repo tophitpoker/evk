@@ -5,23 +5,7 @@
 
 -export([make_url/4]).
 
--type params() :: [{Key :: atom(), Value :: binary()}].
-
--define(API_URL, "http://api.vk.com/api.php").
-
-%%
-%% secure.* methods
-%%
--define(SECURE_SEND_NOTIFICATION, <<"secure.sendNotification">>).
--define(SECURE_GET_APP_BALANCE, <<"secure.getAppBalance">>).
--define(SECURE_GET_BALANCE, <<"secure.getBalance">>).
--define(SECURE_WITHDRAW_VOTES, <<"secure.withdrawVotes">>).
--define(SECURE_GET_TRANSACTIONS_HISTORY, <<"secure.getTransactionsHistory">>).
--define(SECURE_ADD_RATING, <<"secure.addRating">>).
--define(SECURE_SET_COUNTER, <<"secure.setCounter">>).
-
-%%
--define(GET_PROFILES, <<"getProfiles">>).
+-include("evk.hrl").
 
 %% @doc Build url request to http://api.vk.com/
 %% @param AppId - vkontakte application id
@@ -29,9 +13,15 @@
 %% @param Method - method request
 %% @param Params - list of param to request
 %% @end
--spec make_url(integer(), binary() | maybe_improper_list(any(),binary() | []) | byte(), Method :: binary(), Params :: params()) -> binary().
+-spec make_url(integer(), binary() | maybe_improper_list(any(),binary() | []) | byte(), Method :: binary(), Params :: [{Key :: atom(), Value :: binary()}]) -> binary() | error.
+make_url(_, _, <<"">>, _) ->
+    error;
+make_url(_, <<"">>, _, _) ->
+    error;
+make_url(<<"">>, _, _, _) ->
+    error;
 make_url(AppId, SecretKey, Method, Params) ->
-    % Add api_id to params
+    % Add app_id to params
     NewParams1 = lists:append([{api_id, AppId}], Params),
     % Add version to params
     NewParams2 = lists:append([{v, <<"3.0">>}], NewParams1),
@@ -62,7 +52,7 @@ make_url(AppId, SecretKey, Method, Params) ->
     % Add sig to params
     NewParams7 = lists:append(SortParams, [{sig, Md5Sig}]),
     % Build query
-    list_to_binary(lists:flatten(?API_URL ++ "?" ++ params(NewParams7))).
+    list_to_binary(lists:flatten(?EVK_API_URL ++ "?" ++ params(NewParams7))).
 
 %% @doc Add symbol between params
 %% @end

@@ -18,7 +18,7 @@ AppId = <<"100">>,
 % Application Secret Key
 AppSecretKey = <<"SecretKey">>,
 % Building API request url
-RequestURl = evk:make_url(AppId, AppSecretKey, ?GET_PROFILES, [{uids, <<"1">>}, {fields, <<"online">>}]).
+RequestURl = evk:make_url(AppId, AppSecretKey, ?EVK_GET_PROFILES, [{uids, <<"1">>}, {fields, <<"online">>}]).
 % ...
 % Call RequestURl and parse result
 % PROFIT!
