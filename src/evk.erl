@@ -7,6 +7,8 @@
 
 -include("evk.hrl").
 
+-export([md5str/1]).
+
 %% @doc Build url request to http://api.vk.com/
 %% @param AppId - vkontakte application id
 %% @param SecretKey - application  secret key
@@ -48,7 +50,7 @@ make_url(AppId, SecretKey, Method, Params) ->
     % Flat this list and add SeckertKey to the end of sig
     Sig = lists:append(lists:flatten(AppendedList), binary_to_list(SecretKey)),
     % Convert sig to md5
-    Md5Sig = list_to_binary(md5_hex(Sig)),
+    Md5Sig = list_to_binary(md5str(Sig)),
     % Add sig to params
     NewParams7 = lists:append(SortParams, [{sig, Md5Sig}]),
     % Build query
@@ -72,28 +74,18 @@ params(Params) ->
     end, Params),
 
     lists:flatten(Url).
-
+    
 %% @doc Get time stamp
 %% @end
 -spec get_timestamp() -> binary().
 get_timestamp() ->
     {M, S, _} = now(),
     list_to_binary(io_lib:format("~p", [M * 1000000 + S])).
-    
-md5_hex(S) ->
-    Md5_bin =  erlang:md5(S),
-    Md5_list = binary_to_list(Md5_bin),
-    lists:flatten(list_to_hex(Md5_list)).
-    
-list_to_hex(L) ->
-    lists:map(fun(X) -> int_to_hex(X) end, L).
 
-int_to_hex(N) when N < 256 ->
-    [hex(N div 16), hex(N rem 16)].
-
-hex(N) when N < 10 ->
-    $0+N;
-
-hex(N) when N >= 10, N < 16 ->
-    $a + (N-10).
-
+%%
+%% Taken from http://sacharya.com/md5-in-erlang/
+%%
+-spec md5str(Data :: string()) -> string().
+md5str(Data) ->
+    <<X:128/big-unsigned-integer>> = erlang:md5(Data),
+    lists:flatten(io_lib:format("~32.16.0b", [X])).
